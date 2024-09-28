@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.4...v1.0.5) (2024-09-28)
+
+
+### Bug Fixes
+
+* **deploy:** adding init args to prod apply ([34dae99](https://github.com/jamcatbiz/jamescate.com/commit/34dae99908f2d2f9063af87520c93a94dc3620de))
+
 ## [1.0.4](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.3...v1.0.4) (2024-09-28)
 
 
