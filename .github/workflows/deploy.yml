@@ -70,13 +70,12 @@ jobs:
           name: app-build
           path: app/build
           retention-days: 1
-      - run: |
-          ls -R
-          ls -R app/build
       - name: sync S3 and invalidate cache
+        env: 
+          AWS_DEFAULT_REGION: ${{ vars.AWS_REGION }}
         run: |
           aws s3 sync app/build/ s3://${{ needs.beta-infra-apply.outputs.s3_bucket_id }} --delete
-          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths '/games/weordl/*'
+          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths ${{ vars.INVALIDATION_PATH }}
   prod-infra-plan:
     name: plan prod infra changes
     runs-on: ubuntu-latest
@@ -145,10 +144,9 @@ jobs:
         with:
           name: app-build
           path: app/build
-      - run: |
-          ls -R
-          ls -R app/build
       - name: sync S3 and invalidate cache
+        env: 
+          AWS_DEFAULT_REGION: ${{ vars.AWS_REGION }}
         run: |
           aws s3 sync app/build/ s3://${{ needs.prod-infra-apply.outputs.s3_bucket_id }} --delete
-          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths '/games/weordl/*'
+          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths ${{ vars.INVALIDATION_PATH }}
