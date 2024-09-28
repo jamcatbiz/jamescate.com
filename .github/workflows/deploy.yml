@@ -65,14 +65,17 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE }}
+          role-session-name: github_actions_deploy_app_weordl
+          aws-region: ${{ vars.AWS_REGION }}
       - uses: actions/download-artifact@v4
         with:
           name: app-build
           path: app/build
           retention-days: 1
       - name: sync S3 and invalidate cache
-        env: 
-          AWS_DEFAULT_REGION: ${{ vars.AWS_REGION }}
         run: |
           aws s3 sync app/build/ s3://${{ needs.beta-infra-apply.outputs.s3_bucket_id }} --delete
           aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths '${{ vars.INVALIDATION_PATH }}'
@@ -140,13 +143,16 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE }}
+          role-session-name: github_actions_deploy_app_weordl
+          aws-region: ${{ vars.AWS_REGION }}
       - uses: actions/download-artifact@v4
         with:
           name: app-build
           path: app/build
       - name: sync S3 and invalidate cache
-        env: 
-          AWS_DEFAULT_REGION: ${{ vars.AWS_REGION }}
         run: |
           aws s3 sync app/build/ s3://${{ needs.prod-infra-apply.outputs.s3_bucket_id }} --delete
           aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths '${{ vars.INVALIDATION_PATH }}'
