@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.6](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.5...v1.0.6) (2024-09-28)
+
+
+### Bug Fixes
+
+* **app:** gitignore adding package lock ([1fa929f](https://github.com/jamcatbiz/jamescate.com/commit/1fa929f5d185a102cb7dc854d7690a966d271d6f))
+* **infra:** updating s3 origin to website domain ([74e5134](https://github.com/jamcatbiz/jamescate.com/commit/74e5134bf30a38c6ef734dec00f34df3614b7be6))
+
 ## [1.0.5](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.4...v1.0.5) (2024-09-28)
 
 
