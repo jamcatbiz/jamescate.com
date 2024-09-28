@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.3...v1.0.4) (2024-09-28)
+
+
+### Bug Fixes
+
+* **deploy:** adding aws perms to sync and cache invalidate ([c84bb84](https://github.com/jamcatbiz/jamescate.com/commit/c84bb849971f063f1d83023079afc2e54f9d7caf))
+
 ## [1.0.3](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.2...v1.0.3) (2024-09-28)
 
 
