@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.0...v1.0.1) (2024-09-28)
+
+
+### Bug Fixes
+
+* svelte settings ([92ac4c2](https://github.com/jamcatbiz/jamescate.com/commit/92ac4c2a01e2dc729a6a3686160b0e0cbe4c3793))
+
 ## 1.0.0 (2024-09-28)
 
 
