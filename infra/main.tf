@@ -97,7 +97,7 @@ resource "aws_cloudfront_distribution" "this" {
 
   # Weordl Origin
   origin {
-    domain_name              = aws_s3_bucket_website_configuration.this.website_domain
+    domain_name              = aws_s3_bucket_website_configuration.this.website_endpoint
     origin_access_control_id = aws_cloudfront_origin_access_control.this.id
     origin_id                = local.weordl_origin_id
   }
