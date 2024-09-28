@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.7](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.6...v1.0.7) (2024-09-28)
+
+
+### Bug Fixes
+
+* **infra:** updating s3 origin to website endpoint ([f5a7f73](https://github.com/jamcatbiz/jamescate.com/commit/f5a7f73242156ed84eef5edcf83a96b0eae803f9))
+
 ## [1.0.6](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.5...v1.0.6) (2024-09-28)
 
 
