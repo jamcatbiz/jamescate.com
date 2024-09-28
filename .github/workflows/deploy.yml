@@ -1,0 +1,154 @@
+name: '[Deploy] Release'
+on:
+  release:
+    types: [released]
+jobs:
+  app-build: 
+    name: build app
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE }}
+          role-session-name: github_actions_deploy_app_weordl
+          aws-region: ${{ vars.AWS_REGION }}
+      - run: |
+          cd app 
+          npm install
+          npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-build
+          path: app/build
+          retention-days: 1
+  beta-infra-apply:
+    name: plan and apply infra changes
+    environment: beta
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE }}
+          role-session-name: github_actions_deploy_app_weordl
+          aws-region: ${{ vars.AWS_REGION }}
+      - id: do-tf
+        uses: jamcatbiz/do-tf@v0.5.0
+        with:
+          tf_flavor: tofu
+          dir_path: ./infra/
+          version: 1.8.1
+          plan_only: false
+          init_args: >-
+            -backend-config="./config/beta.s3.tfbackend"
+          plan_args: >-
+            -var-file="./config/beta.tfvars"
+            -var="source_control=${{ format('{0}/{1}/infra/', github.repository_owner, github.repository) }}"
+            -var="source_version=${{ github.event.release.tag_name }}"
+    outputs:
+      s3_bucket_id: ${{ fromJSON(steps.do-tf.outputs.tf_output).s3_bucket_id.value }}
+  beta-app-deploy:
+    name: deploy app to beta origin
+    needs:
+      - app-build
+      - beta-infra-apply
+    environment: beta
+    runs-on:  ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-build
+          path: app/build
+          retention-days: 1
+      - run: |
+          ls -R
+          ls -R app/build
+      - name: sync S3 and invalidate cache
+        run: |
+          aws s3 sync app/build/ s3://${{ needs.beta-infra-apply.outputs.s3_bucket_id }} --delete
+          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths '/games/weordl/*'
+  prod-infra-plan:
+    name: plan prod infra changes
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE }}
+          role-session-name: github_actions_deploy_app_weordl
+          aws-region: ${{ vars.AWS_REGION }}
+      - uses: jamcatbiz/do-tf@v0.5.0
+        id: do-tf
+        with:
+          tf_flavor: tofu
+          dir_path: ./infra/
+          version: 1.8.1
+          plan_only: true
+          init_args: >-
+            -backend-config="./config/prod.s3.tfbackend"
+          plan_args: >-
+            -var-file="./config/prod.tfvars"
+            -var="source_control=${{ format('{0}/{1}/infra/', github.repository_owner, github.repository) }}"
+            -var="source_version=${{ github.event.release.tag_name }}"
+    outputs:
+      plan_artifact_name: steps.do-tf.outputs.plan_artifact_name
+  prod-infra-apply:
+    name: apply prod infra plan
+    needs: [prod-infra-plan]
+    runs-on: ubuntu-latest
+    environment: prod
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE }}
+          role-session-name: github_actions_deploy_app_weordl
+          aws-region: ${{ vars.AWS_REGION }}
+      - id: do-tf
+        uses: jamcatbiz/do-tf@v0.5.0
+        with:
+          tf_flavor: tofu
+          dir_path: ./infra/
+          version: 1.8.1
+          plan_only: false
+          plan_artifact_name: needs.prod-infra-plan.outputs.plan_artifact_name
+    outputs:
+      s3_bucket_id: ${{ fromJSON(steps.do-tf.outputs.tf_output).s3_bucket_id.value }}
+  prod-app-deploy:
+    name: deploy app to prod origin
+    needs:
+      - app-build
+      - prod-infra-apply
+    environment: prod
+    runs-on:  ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-build
+          path: app/build
+      - run: |
+          ls -R
+          ls -R app/build
+      - name: sync S3 and invalidate cache
+        run: |
+          aws s3 sync app/build/ s3://${{ needs.prod-infra-apply.outputs.s3_bucket_id }} --delete
+          aws cloudfront create-invalidation --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} --paths '/games/weordl/*'

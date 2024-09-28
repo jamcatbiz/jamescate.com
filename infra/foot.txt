@@ -1,0 +1,4 @@
+cloudfront_distribution_id=E5OECTRVHHRM6
+distribution_domain_name=d3kbtjkmcy9d38.cloudfront.net
+s3_bucket_id=jamescate.com
+vanity_domain={"root":"jamescate.com","www":"www.jamescate.com"}
