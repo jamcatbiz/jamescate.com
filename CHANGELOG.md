@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.1...v1.0.2) (2024-09-28)
+
+
+### Bug Fixes
+
+* build lock breaking due to os ([78e87f4](https://github.com/jamcatbiz/jamescate.com/commit/78e87f49295d2c3514ec798172c89becb7c5e75f))
+
 ## [1.0.1](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.0...v1.0.1) (2024-09-28)
 
 
