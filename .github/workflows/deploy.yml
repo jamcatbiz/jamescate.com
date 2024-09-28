@@ -130,6 +130,8 @@ jobs:
           version: 1.8.1
           plan_only: false
           plan_artifact_name: needs.prod-infra-plan.outputs.plan_artifact_name
+          init_args: >-
+            -backend-config="./config/prod.s3.tfbackend"
     outputs:
       s3_bucket_id: ${{ fromJSON(steps.do-tf.outputs.tf_output).s3_bucket_id.value }}
   prod-app-deploy:
