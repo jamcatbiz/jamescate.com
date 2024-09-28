@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.2...v1.0.3) (2024-09-28)
+
+
+### Bug Fixes
+
+* **deploy:** adding default region fix to cli commands ([7223102](https://github.com/jamcatbiz/jamescate.com/commit/72231025666fbd592b2483a3531a7a24ae00b3bb))
+* **deploy:** invalidate path fix ([2d979ad](https://github.com/jamcatbiz/jamescate.com/commit/2d979ada8dd78e882ac3354ad3c2c30388bd36c9))
+
 ## [1.0.2](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.1...v1.0.2) (2024-09-28)
 
 
