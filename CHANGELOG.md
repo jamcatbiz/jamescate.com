@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.8](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.7...v1.0.8) (2024-09-29)
+
+
+### Bug Fixes
+
+* docs and revert ([731c6c0](https://github.com/jamcatbiz/jamescate.com/commit/731c6c0ab8e09af1d096ea86dd94832e6443642b))
+
 ## [1.0.7](https://github.com/jamcatbiz/jamescate.com/compare/v1.0.6...v1.0.7) (2024-09-28)
 
 
