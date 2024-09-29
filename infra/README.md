@@ -1,6 +1,6 @@
 # Welcome
 
-Hello
+This folder contains the infrastructure-as-code for this project, it's little more than an S3 bucket configured to be served by a CloudFront Distribution.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
