@@ -88,18 +88,11 @@ resource "aws_cloudfront_distribution" "this" {
   aliases             = values(local.route53_records[var.environment])
   price_class         = "PriceClass_100"
 
-  # Root origin
+  # Root Origin and Default Cache
   origin {
     domain_name              = aws_s3_bucket.this.bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.this.id
     origin_id                = local.root_origin_id
-  }
-
-  # Weordl Origin
-  origin {
-    domain_name              = aws_s3_bucket_website_configuration.this.website_endpoint
-    origin_access_control_id = aws_cloudfront_origin_access_control.this.id
-    origin_id                = local.weordl_origin_id
   }
 
   default_cache_behavior {
@@ -108,6 +101,13 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods         = ["GET", "HEAD"]
     viewer_protocol_policy = "redirect-to-https"
     cache_policy_id        = aws_cloudfront_cache_policy.this.id
+  }
+
+  # Weordl Origin and Behavior
+  origin {
+    domain_name              = data.aws_s3_bucket.weordl.bucket_regional_domain_name
+    origin_access_control_id = aws_cloudfront_origin_access_control.this.id
+    origin_id                = local.weordl_origin_id
   }
 
   ordered_cache_behavior {
